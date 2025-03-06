@@ -1,0 +1,12 @@
+env: "local"
+http_server:
+  address: ":8080"
+  timeout: 4s
+  idle_timeout: 60s
+storage:
+  host: localhost
+  port: 5432
+  database: music_library
+  username: postgres
+  password: postgres
+  use_in_memory: false
