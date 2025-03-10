@@ -426,7 +426,7 @@ DELETE /songs/{id}
 
 It is also delete Lyrics which have this song_id.
 
-### Update Song
+### Get Song
 
 **Request**:
 
