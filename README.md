@@ -5,13 +5,13 @@
 
 ## ➤ Table of Contents
 
-1. [Introduction](#introduction)
-2. [Main Features](#main-features)
-3. [Installation](#installation)
-4. [Swagger](#swagger)
-2. [Project Structure](#project-structure)
-3. [Models](#models)
-4. [API Endpoints](#api-endpoints)
+1. [Introduction](#-introduction)
+2. [Main Features](#-main-features)
+3. [Installation](#-installation)
+4. [Swagger](#-swagger)
+2. [Project Structure](#-project-structure)
+3. [Models](#-models)
+4. [API Endpoints](#-api-endpoints)
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#introduction)
 
