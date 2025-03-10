@@ -1,0 +1,353 @@
+definitions:
+  models.Lyric:
+    description: Song lyrics model
+    properties:
+      id:
+        type: integer
+      song_id:
+        type: integer
+      text:
+        type: string
+      verse_number:
+        type: integer
+    type: object
+  models.Song:
+    description: Song model
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      lyrics:
+        items:
+          $ref: '#/definitions/models.Lyric'
+        type: array
+      release_date:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /lyrics:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new lyric entry for a specific song in the database.
+      parameters:
+      - description: Lyric object containing song ID and text
+        in: body
+        name: lyric
+        required: true
+        schema:
+          $ref: '#/definitions/models.Lyric'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created lyric entry
+          schema:
+            $ref: '#/definitions/models.Lyric'
+        "400":
+          description: Invalid input format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new lyric entry
+      tags:
+      - Lyrics
+  /lyrics/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Removes a lyric entry from the database using its ID.
+      parameters:
+      - description: Lyric ID
+        format: int
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully deleted lyric ID
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid lyric ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Lyrics not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a lyric entry
+      tags:
+      - Lyrics
+    get:
+      consumes:
+      - application/json
+      description: Fetches the lyrics of a song using its unique ID.
+      parameters:
+      - description: Lyric ID
+        format: int
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully retrieved lyrics
+          schema:
+            $ref: '#/definitions/models.Lyric'
+        "400":
+          description: Invalid ID format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Lyrics not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Retrieve lyrics by ID
+      tags:
+      - Lyrics
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing lyric entry using its unique ID.
+      parameters:
+      - description: Lyric ID
+        format: int
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated lyric object
+        in: body
+        name: lyric
+        required: true
+        schema:
+          $ref: '#/definitions/models.Lyric'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated lyrics
+          schema:
+            $ref: '#/definitions/models.Lyric'
+        "400":
+          description: Invalid input format
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Lyrics not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update lyrics information
+      tags:
+      - Lyrics
+  /songs:
+    get:
+      consumes:
+      - application/json
+      description: Fetch a list of all songs, with optional filters for group, title,
+        release date, and link. Pagination is supported with offset and page_size
+        parameters.
+      parameters:
+      - description: Filter songs by group name
+        in: query
+        name: group
+        type: string
+      - description: Filter songs by title
+        in: query
+        name: title
+        type: string
+      - description: Filter songs by release date (YYYY-MM-DD)
+        in: query
+        name: release_date
+        type: string
+      - description: Filter songs by associated link
+        in: query
+        name: link
+        type: string
+      - description: 'Pagination offset, starting from 0 (default: 0)'
+        in: query
+        name: offset
+        type: integer
+      - description: 'Number of items per page (default: 10)'
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of songs with pagination metadata
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all songs
+      tags:
+      - songs
+    post:
+      consumes:
+      - application/json
+      description: Add a new song to the database
+      parameters:
+      - description: Song object
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add a new song
+      tags:
+      - songs
+  /songs/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a song from the database using its ID
+      parameters:
+      - description: ID of the song to be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ID of the deleted song
+          schema:
+            additionalProperties:
+              type: integer
+            type: object
+        "400":
+          description: Invalid song ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Song not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a song
+      tags:
+      - songs
+    get:
+      consumes:
+      - application/json
+      description: Fetch details of a specific song by its ID
+      parameters:
+      - description: ID of the song
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Song details
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Invalid song ID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Song not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get song by ID
+      tags:
+      - songs
+    put:
+      consumes:
+      - application/json
+      description: Update song details by its ID, such as title, group, or release
+        date
+      parameters:
+      - description: ID of the song to be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated song details
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated song details
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Invalid input data
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Song not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update an existing song
+      tags:
+      - songs
+swagger: "2.0"

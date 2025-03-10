@@ -9,6 +9,18 @@ import (
 	"strconv"
 )
 
+// GetLyric godoc
+//
+//	@Summary		Retrieve lyrics by ID
+//	@Description	Fetches the lyrics of a song using its unique ID.
+//	@Tags			Lyrics
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int					true	"Lyric ID"	Format(int)
+//	@Success		200	{object}	models.Lyric		"Successfully retrieved lyrics"
+//	@Failure		400	{object}	map[string]string	"Invalid ID format"
+//	@Failure		404	{object}	map[string]string	"Lyrics not found"
+//	@Router			/lyrics/{id} [get]
 func GetLyric(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -24,6 +36,19 @@ func GetLyric(c *gin.Context) {
 
 }
 
+// UpdateLyric godoc
+//
+//	@Summary		Update lyrics information
+//	@Description	Updates an existing lyric entry using its unique ID.
+//	@Tags			Lyrics
+//	@Accept			json
+//	@Produce		json
+//	@Param			id		path		int					true	"Lyric ID"	Format(int)
+//	@Param			lyric	body		models.Lyric		true	"Updated lyric object"
+//	@Success		200		{object}	models.Lyric		"Successfully updated lyrics"
+//	@Failure		400		{object}	map[string]string	"Invalid input format"
+//	@Failure		404		{object}	map[string]string	"Lyrics not found"
+//	@Router			/lyrics/{id} [put]
 func UpdateLyric(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -49,6 +74,18 @@ func UpdateLyric(c *gin.Context) {
 
 }
 
+// DeleteLyric godoc
+//
+//	@Summary		Delete a lyric entry
+//	@Description	Removes a lyric entry from the database using its ID.
+//	@Tags			Lyrics
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		int					true	"Lyric ID"	Format(int)
+//	@Success		200	{object}	map[string]int		"Successfully deleted lyric ID"
+//	@Failure		400	{object}	map[string]string	"Invalid lyric ID format"
+//	@Failure		404	{object}	map[string]string	"Lyrics not found"
+//	@Router			/lyrics/{id} [delete]
 func DeleteLyric(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -68,6 +105,17 @@ func DeleteLyric(c *gin.Context) {
 
 }
 
+// AddLyric godoc
+//
+//	@Summary		Create a new lyric entry
+//	@Description	Adds a new lyric entry for a specific song in the database.
+//	@Tags			Lyrics
+//	@Accept			json
+//	@Produce		json
+//	@Param			lyric	body		models.Lyric		true	"Lyric object containing song ID and text"
+//	@Success		201		{object}	models.Lyric		"Successfully created lyric entry"
+//	@Failure		400		{object}	map[string]string	"Invalid input format"
+//	@Router			/lyrics [post]
 func AddLyric(c *gin.Context) {
 	var newLyric models.Lyric
 	if err := c.ShouldBindJSON(&newLyric); err != nil {

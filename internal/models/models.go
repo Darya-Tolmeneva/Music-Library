@@ -1,11 +1,8 @@
 package models
 
-import (
-	"github.com/jinzhu/gorm"
-)
-
+// Song represents a song
+// @Description Song model
 type Song struct {
-	gorm.Model
 	ID          uint    `gorm:"primaryKey"`
 	Group       string  `json:"group"`
 	Title       string  `json:"title"`
@@ -14,8 +11,9 @@ type Song struct {
 	Lyrics      []Lyric `json:"lyrics" gorm:"foreignKey:SongID"`
 }
 
+// Lyric represents a song lyric
+// @Description Song lyrics model
 type Lyric struct {
-	gorm.Model
 	ID          uint   `gorm:"primaryKey"`
 	SongID      uint   `json:"song_id"`
 	VerseNumber int    `json:"verse_number"`

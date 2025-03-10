@@ -1,22 +1,24 @@
+<!-- ⚠️ This README has been generated from the file(s) "blueprint.md" ⚠️-->
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#music-library-api)
 
 # Music Library API
 
+## ➤ Table of Contents
 
-## Table of Contents
-1. [Introduction](#-introduction)
-2. [Main Features](#-main-features)
-3. [Installation](#-installation)
-2. [Project Structure](#-project-structure)
-3. [Models](#-models)
-4. [API Endpoints](#-api-endpoints)
-
+1. [Introduction](#introduction)
+2. [Main Features](#main-features)
+3. [Installation](#installation)
+4. [Swagger](#swagger)
+2. [Project Structure](#project-structure)
+3. [Models](#models)
+4. [API Endpoints](#api-endpoints)
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#introduction)
 
 ## ➤ Introduction
-This project is a RESTful API for managing a music library. The API allows adding, deleting, updating, and retrieving information about songs and their lyrics.
 
+This project is a RESTful API for managing a music library. The API allows adding, deleting, updating, and retrieving
+information about songs and their lyrics.
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#main-features)
 
@@ -32,7 +34,6 @@ This project is a RESTful API for managing a music library. The API allows addin
 - **Delete Lyric**: Delete lyrics for a song.
 - **Add Lyric**: Add lyrics for a specific song.
 
-
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#technologies)
 
 ## ➤ Technologies
@@ -41,7 +42,6 @@ This project is a RESTful API for managing a music library. The API allows addin
 - **Framework**: Gin
 - **Database**: PostgreSQL
 - **ORM**: GORM
-
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#installation)
 
@@ -74,6 +74,17 @@ This project is a RESTful API for managing a music library. The API allows addin
 
    The server will be available at `http://localhost:8080`.
 
+[![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#swagger)
+
+## ➤ Swagger
+
+Then you run project you can open `http://localhost:8080/docs/index.html` and see swagger.
+
+If you change something and want to rebuild swagger, you need run
+
+```bash
+swag init
+```
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#models)
 
@@ -81,16 +92,16 @@ This project is a RESTful API for managing a music library. The API allows addin
 
 #### Model `Song`
 
-| Field        | Type         | Description                                   |
-|--------------|--------------|-----------------------------------------------|
-| `ID`         | `uint`       | Unique identifier of the song                 |
-| `Group`      | `string`     | The group that performed the song             |
-| `Title`      | `string`     | The title of the song                         |
-| `ReleaseDate`| `string`     | Release date                                  |
-| `Link`       | `string`     | Link to the song                              |
-| `CreatedAt`  | `time.Time`  | Date and time of creation                     |
-| `UpdatedAt`  | `time.Time`  | Date and time of last update                  |
-| `DeletedAt`  | `time.Time`  | Date and time of deletion (if applicable)     |
+| Field         | Type        | Description                               |
+|---------------|-------------|-------------------------------------------|
+| `ID`          | `uint`      | Unique identifier of the song             |
+| `Group`       | `string`    | The group that performed the song         |
+| `Title`       | `string`    | The title of the song                     |
+| `ReleaseDate` | `string`    | Release date                              |
+| `Link`        | `string`    | Link to the song                          |
+| `CreatedAt`   | `time.Time` | Date and time of creation                 |
+| `UpdatedAt`   | `time.Time` | Date and time of last update              |
+| `DeletedAt`   | `time.Time` | Date and time of deletion (if applicable) |
 
 #### Model `Lyric`
 
@@ -104,16 +115,12 @@ This project is a RESTful API for managing a music library. The API allows addin
 | `UpdatedAt`   | `time.Time` | Date and time of last update              |
 | `DeletedAt`   | `time.Time` | Date and time of deletion (if applicable) |
 
-
-
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#project-structure)
 
 ## ➤ Project Structure
 
 ```
-|_ cmd
-     |_ app
-         |_ main.go
+
 |_ config
      |_ config.go
      |_ config.yaml
@@ -130,10 +137,10 @@ This project is a RESTful API for managing a music library. The API allows addin
          |_ handlers
                |_ lyricHandlers.go
                |_ songHandlers.go
+main.go
 go.mod
 README.md
 ```
-
 
 [![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/colored.png)](#api-endpoints)
 
@@ -163,42 +170,43 @@ POST /songs
     ]
 }
 ```
+
 Here you can skip lyrics.
 
 **Response**:
 
 ```json
 {
-   "song": {
-      "CreatedAt": "2025-03-10T18:04:34.552783942+03:00",
-      "UpdatedAt": "2025-03-10T18:04:34.552783942+03:00",
-      "DeletedAt": null,
-      "ID": 12,
-      "group": "The Beatles",
-      "title": "Norwegian Wood",
-      "releaseDate": "1965-12-03",
-      "link": "https://example.com",
-      "lyrics": [
-         {
-            "CreatedAt": "2025-03-10T18:04:34.562256089+03:00",
-            "UpdatedAt": "2025-03-10T18:04:34.562256089+03:00",
-            "DeletedAt": null,
-            "ID": 21,
-            "song_id": 12,
-            "verse_number": 1,
-            "text": "I once had a girl, or should I say, she once had me..."
-         },
-         {
-            "CreatedAt": "2025-03-10T18:04:34.562256089+03:00",
-            "UpdatedAt": "2025-03-10T18:04:34.562256089+03:00",
-            "DeletedAt": null,
-            "ID": 22,
-            "song_id": 12,
-            "verse_number": 2,
-            "text": "She showed me her room, isn't it good, Norwegian wood?"
-         }
-      ]
-   }
+  "song": {
+    "CreatedAt": "2025-03-10T18:04:34.552783942+03:00",
+    "UpdatedAt": "2025-03-10T18:04:34.552783942+03:00",
+    "DeletedAt": null,
+    "ID": 12,
+    "group": "The Beatles",
+    "title": "Norwegian Wood",
+    "releaseDate": "1965-12-03",
+    "link": "https://example.com",
+    "lyrics": [
+      {
+        "CreatedAt": "2025-03-10T18:04:34.562256089+03:00",
+        "UpdatedAt": "2025-03-10T18:04:34.562256089+03:00",
+        "DeletedAt": null,
+        "ID": 21,
+        "song_id": 12,
+        "verse_number": 1,
+        "text": "I once had a girl, or should I say, she once had me..."
+      },
+      {
+        "CreatedAt": "2025-03-10T18:04:34.562256089+03:00",
+        "UpdatedAt": "2025-03-10T18:04:34.562256089+03:00",
+        "DeletedAt": null,
+        "ID": 22,
+        "song_id": 12,
+        "verse_number": 2,
+        "text": "She showed me her room, isn't it good, Norwegian wood?"
+      }
+    ]
+  }
 }
 ```
 
@@ -209,152 +217,153 @@ Here you can skip lyrics.
 ```bash
 GET /songs?group=The Beatles&offset=1&page_size=10
 ```
+
 Here you can specify offset and page_size. Also group name, title, release date (in format "2005-01-01") and link.
 
 **Response**:
 
 ```json
 {
-   "data": [
-      {
-         "CreatedAt": "2025-03-06T23:16:40.736127+03:00",
-         "UpdatedAt": "2025-03-06T23:16:40.736127+03:00",
-         "DeletedAt": null,
-         "ID": 2,
-         "group": "The Beatles",
-         "title": "Norwegian wood",
-         "releaseDate": "2005-01-01",
-         "link": "meow",
-         "lyrics": []
-      },
-      {
-         "CreatedAt": "2025-03-07T09:46:29.29592+03:00",
-         "UpdatedAt": "2025-03-07T09:46:29.29592+03:00",
-         "DeletedAt": null,
-         "ID": 9,
-         "group": "The Beatles",
-         "title": "Norwegian Wood",
-         "releaseDate": "1965-12-03",
-         "link": "https://example.com",
-         "lyrics": [
-            {
-               "CreatedAt": "2025-03-07T09:46:29.297095+03:00",
-               "UpdatedAt": "2025-03-07T09:46:29.297095+03:00",
-               "DeletedAt": null,
-               "ID": 6,
-               "song_id": 9,
-               "verse_number": 1,
-               "text": "I once had a girl, or should I say, she once had me..."
-            }
-         ]
-      },
-      {
-         "CreatedAt": "2025-03-07T09:47:01.348434+03:00",
-         "UpdatedAt": "2025-03-07T09:47:01.348434+03:00",
-         "DeletedAt": null,
-         "ID": 10,
-         "group": "The Beatles",
-         "title": "Norwegian Wood",
-         "releaseDate": "1965-12-03",
-         "link": "https://example.com",
-         "lyrics": []
-      },
-      {
-         "CreatedAt": "2025-03-07T10:00:19.772603+03:00",
-         "UpdatedAt": "2025-03-07T10:00:19.772603+03:00",
-         "DeletedAt": null,
-         "ID": 11,
-         "group": "The Beatles",
-         "title": "Norwegian Wood",
-         "releaseDate": "1965-12-03",
-         "link": "https://example.com",
-         "lyrics": [
-            {
-               "CreatedAt": "2025-03-07T10:00:19.774201+03:00",
-               "UpdatedAt": "2025-03-10T16:49:11.238136+03:00",
-               "DeletedAt": null,
-               "ID": 7,
-               "song_id": 11,
-               "verse_number": 1,
-               "text": "meow"
-            },
-            {
-               "CreatedAt": "2025-03-10T16:50:15.198218+03:00",
-               "UpdatedAt": "2025-03-10T16:50:15.198218+03:00",
-               "DeletedAt": null,
-               "ID": 20,
-               "song_id": 11,
-               "verse_number": 2,
-               "text": "meow"
-            }
-         ]
-      },
-      {
-         "CreatedAt": "2025-03-10T18:04:34.552783+03:00",
-         "UpdatedAt": "2025-03-10T18:04:34.552783+03:00",
-         "DeletedAt": null,
-         "ID": 12,
-         "group": "The Beatles",
-         "title": "Norwegian Wood",
-         "releaseDate": "1965-12-03",
-         "link": "https://example.com",
-         "lyrics": [
-            {
-               "CreatedAt": "2025-03-10T18:04:34.562256+03:00",
-               "UpdatedAt": "2025-03-10T18:04:34.562256+03:00",
-               "DeletedAt": null,
-               "ID": 21,
-               "song_id": 12,
-               "verse_number": 1,
-               "text": "I once had a girl, or should I say, she once had me..."
-            },
-            {
-               "CreatedAt": "2025-03-10T18:04:34.562256+03:00",
-               "UpdatedAt": "2025-03-10T18:04:34.562256+03:00",
-               "DeletedAt": null,
-               "ID": 22,
-               "song_id": 12,
-               "verse_number": 2,
-               "text": "She showed me her room, isn't it good, Norwegian wood?"
-            }
-         ]
-      },
-      {
-         "CreatedAt": "2025-03-10T18:05:47.618165+03:00",
-         "UpdatedAt": "2025-03-10T18:05:47.618165+03:00",
-         "DeletedAt": null,
-         "ID": 13,
-         "group": "The Beatles",
-         "title": "Norwegian Wood",
-         "releaseDate": "1965-12-03",
-         "link": "https://example.com",
-         "lyrics": [
-            {
-               "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-               "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
-               "DeletedAt": null,
-               "ID": 23,
-               "song_id": 13,
-               "verse_number": 1,
-               "text": "I once had a girl, or should I say, she once had me..."
-            },
-            {
-               "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-               "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
-               "DeletedAt": null,
-               "ID": 24,
-               "song_id": 13,
-               "verse_number": 2,
-               "text": "She showed me her room, isn't it good, Norwegian wood?"
-            }
-         ]
-      }
-   ],
-   "pagination": {
-      "offset": 1,
-      "page_size": 10,
-      "total": 7
-   }
+  "data": [
+    {
+      "CreatedAt": "2025-03-06T23:16:40.736127+03:00",
+      "UpdatedAt": "2025-03-06T23:16:40.736127+03:00",
+      "DeletedAt": null,
+      "ID": 2,
+      "group": "The Beatles",
+      "title": "Norwegian wood",
+      "releaseDate": "2005-01-01",
+      "link": "meow",
+      "lyrics": []
+    },
+    {
+      "CreatedAt": "2025-03-07T09:46:29.29592+03:00",
+      "UpdatedAt": "2025-03-07T09:46:29.29592+03:00",
+      "DeletedAt": null,
+      "ID": 9,
+      "group": "The Beatles",
+      "title": "Norwegian Wood",
+      "releaseDate": "1965-12-03",
+      "link": "https://example.com",
+      "lyrics": [
+        {
+          "CreatedAt": "2025-03-07T09:46:29.297095+03:00",
+          "UpdatedAt": "2025-03-07T09:46:29.297095+03:00",
+          "DeletedAt": null,
+          "ID": 6,
+          "song_id": 9,
+          "verse_number": 1,
+          "text": "I once had a girl, or should I say, she once had me..."
+        }
+      ]
+    },
+    {
+      "CreatedAt": "2025-03-07T09:47:01.348434+03:00",
+      "UpdatedAt": "2025-03-07T09:47:01.348434+03:00",
+      "DeletedAt": null,
+      "ID": 10,
+      "group": "The Beatles",
+      "title": "Norwegian Wood",
+      "releaseDate": "1965-12-03",
+      "link": "https://example.com",
+      "lyrics": []
+    },
+    {
+      "CreatedAt": "2025-03-07T10:00:19.772603+03:00",
+      "UpdatedAt": "2025-03-07T10:00:19.772603+03:00",
+      "DeletedAt": null,
+      "ID": 11,
+      "group": "The Beatles",
+      "title": "Norwegian Wood",
+      "releaseDate": "1965-12-03",
+      "link": "https://example.com",
+      "lyrics": [
+        {
+          "CreatedAt": "2025-03-07T10:00:19.774201+03:00",
+          "UpdatedAt": "2025-03-10T16:49:11.238136+03:00",
+          "DeletedAt": null,
+          "ID": 7,
+          "song_id": 11,
+          "verse_number": 1,
+          "text": "meow"
+        },
+        {
+          "CreatedAt": "2025-03-10T16:50:15.198218+03:00",
+          "UpdatedAt": "2025-03-10T16:50:15.198218+03:00",
+          "DeletedAt": null,
+          "ID": 20,
+          "song_id": 11,
+          "verse_number": 2,
+          "text": "meow"
+        }
+      ]
+    },
+    {
+      "CreatedAt": "2025-03-10T18:04:34.552783+03:00",
+      "UpdatedAt": "2025-03-10T18:04:34.552783+03:00",
+      "DeletedAt": null,
+      "ID": 12,
+      "group": "The Beatles",
+      "title": "Norwegian Wood",
+      "releaseDate": "1965-12-03",
+      "link": "https://example.com",
+      "lyrics": [
+        {
+          "CreatedAt": "2025-03-10T18:04:34.562256+03:00",
+          "UpdatedAt": "2025-03-10T18:04:34.562256+03:00",
+          "DeletedAt": null,
+          "ID": 21,
+          "song_id": 12,
+          "verse_number": 1,
+          "text": "I once had a girl, or should I say, she once had me..."
+        },
+        {
+          "CreatedAt": "2025-03-10T18:04:34.562256+03:00",
+          "UpdatedAt": "2025-03-10T18:04:34.562256+03:00",
+          "DeletedAt": null,
+          "ID": 22,
+          "song_id": 12,
+          "verse_number": 2,
+          "text": "She showed me her room, isn't it good, Norwegian wood?"
+        }
+      ]
+    },
+    {
+      "CreatedAt": "2025-03-10T18:05:47.618165+03:00",
+      "UpdatedAt": "2025-03-10T18:05:47.618165+03:00",
+      "DeletedAt": null,
+      "ID": 13,
+      "group": "The Beatles",
+      "title": "Norwegian Wood",
+      "releaseDate": "1965-12-03",
+      "link": "https://example.com",
+      "lyrics": [
+        {
+          "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+          "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
+          "DeletedAt": null,
+          "ID": 23,
+          "song_id": 13,
+          "verse_number": 1,
+          "text": "I once had a girl, or should I say, she once had me..."
+        },
+        {
+          "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+          "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
+          "DeletedAt": null,
+          "ID": 24,
+          "song_id": 13,
+          "verse_number": 2,
+          "text": "She showed me her room, isn't it good, Norwegian wood?"
+        }
+      ]
+    }
+  ],
+  "pagination": {
+    "offset": 1,
+    "page_size": 10,
+    "total": 7
+  }
 }
 ```
 
@@ -365,47 +374,49 @@ Here you can specify offset and page_size. Also group name, title, release date 
 ```bash
 PUT /songs/{id}
 ```
+
 ```json
 {
-    "title": "Norwegian Wood (Updated)"
+  "title": "Norwegian Wood (Updated)"
 }
 ```
+
 Here you can update one parameter or many.
 
 **Response**:
 
 ```json
 {
-   "song": {
-      "CreatedAt": "2025-03-07T10:00:19.772603+03:00",
-      "UpdatedAt": "2025-03-10T22:09:40.25671+03:00",
-      "DeletedAt": null,
-      "ID": 11,
-      "group": "The Beatlesss",
-      "title": "Norwegian Wood (Updated)",
-      "release_date": "1965-12-03",
-      "link": "https://example.com",
-      "lyrics": [
-         {
-            "CreatedAt": "2025-03-07T10:00:19.774201+03:00",
-            "UpdatedAt": "2025-03-10T16:49:11.238136+03:00",
-            "DeletedAt": null,
-            "ID": 7,
-            "song_id": 11,
-            "verse_number": 1,
-            "text": "meow"
-         },
-         {
-            "CreatedAt": "2025-03-10T16:50:15.198218+03:00",
-            "UpdatedAt": "2025-03-10T16:50:15.198218+03:00",
-            "DeletedAt": null,
-            "ID": 20,
-            "song_id": 11,
-            "verse_number": 2,
-            "text": "meow"
-         }
-      ]
-   }
+  "song": {
+    "CreatedAt": "2025-03-07T10:00:19.772603+03:00",
+    "UpdatedAt": "2025-03-10T22:09:40.25671+03:00",
+    "DeletedAt": null,
+    "ID": 11,
+    "group": "The Beatlesss",
+    "title": "Norwegian Wood (Updated)",
+    "release_date": "1965-12-03",
+    "link": "https://example.com",
+    "lyrics": [
+      {
+        "CreatedAt": "2025-03-07T10:00:19.774201+03:00",
+        "UpdatedAt": "2025-03-10T16:49:11.238136+03:00",
+        "DeletedAt": null,
+        "ID": 7,
+        "song_id": 11,
+        "verse_number": 1,
+        "text": "meow"
+      },
+      {
+        "CreatedAt": "2025-03-10T16:50:15.198218+03:00",
+        "UpdatedAt": "2025-03-10T16:50:15.198218+03:00",
+        "DeletedAt": null,
+        "ID": 20,
+        "song_id": 11,
+        "verse_number": 2,
+        "text": "meow"
+      }
+    ]
+  }
 }
 ```
 
@@ -418,15 +429,16 @@ DELETE /songs/{id}
 ```
 
 **Response**:
+
 ```json
 {
-    "deleted_song_id": 11
+  "deleted_song_id": 11
 }
 ```
 
 It is also delete Lyrics which have this song_id.
 
-### Get Song
+### Update Song
 
 **Request**:
 
@@ -435,38 +447,39 @@ GET /songs/{id}
 ```
 
 **Response**:
+
 ```json
 {
-    "song": {
-        "CreatedAt": "2025-03-10T18:05:47.618165+03:00",
-        "UpdatedAt": "2025-03-10T18:05:47.618165+03:00",
+  "song": {
+    "CreatedAt": "2025-03-10T18:05:47.618165+03:00",
+    "UpdatedAt": "2025-03-10T18:05:47.618165+03:00",
+    "DeletedAt": null,
+    "ID": 13,
+    "group": "The Beatles",
+    "title": "Norwegian Wood",
+    "release_date": "1965-12-03",
+    "link": "https://example.com",
+    "lyrics": [
+      {
+        "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+        "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
         "DeletedAt": null,
-        "ID": 13,
-        "group": "The Beatles",
-        "title": "Norwegian Wood",
-        "release_date": "1965-12-03",
-        "link": "https://example.com",
-        "lyrics": [
-            {
-                "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-                "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
-                "DeletedAt": null,
-                "ID": 23,
-                "song_id": 13,
-                "verse_number": 1,
-                "text": "I once had a girl, or should I say, she once had me..."
-            },
-            {
-                "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-                "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
-                "DeletedAt": null,
-                "ID": 24,
-                "song_id": 13,
-                "verse_number": 2,
-                "text": "She showed me her room, isn't it good, Norwegian wood?"
-            }
-        ]
-    }
+        "ID": 23,
+        "song_id": 13,
+        "verse_number": 1,
+        "text": "I once had a girl, or should I say, she once had me..."
+      },
+      {
+        "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+        "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
+        "DeletedAt": null,
+        "ID": 24,
+        "song_id": 13,
+        "verse_number": 2,
+        "text": "She showed me her room, isn't it good, Norwegian wood?"
+      }
+    ]
+  }
 }
 ```
 
@@ -482,15 +495,15 @@ GET /lyrics/{id}
 
 ```json
 {
-   "lyric": {
-      "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-      "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
-      "DeletedAt": null,
-      "ID": 23,
-      "song_id": 13,
-      "verse_number": 1,
-      "text": "I once had a girl, or should I say, she once had me..."
-   }
+  "lyric": {
+    "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+    "UpdatedAt": "2025-03-10T18:05:47.618779+03:00",
+    "DeletedAt": null,
+    "ID": 23,
+    "song_id": 13,
+    "verse_number": 1,
+    "text": "I once had a girl, or should I say, she once had me..."
+  }
 }
 ```
 
@@ -511,15 +524,15 @@ POST /lyrics
 
 ```json
 {
-   "lyric": {
-      "CreatedAt": "2025-03-10T22:21:37.587893086+03:00",
-      "UpdatedAt": "2025-03-10T22:21:37.587893086+03:00",
-      "DeletedAt": null,
-      "ID": 25,
-      "song_id": 13,
-      "verse_number": 3,
-      "text": "This is the third verse of the song."
-   }
+  "lyric": {
+    "CreatedAt": "2025-03-10T22:21:37.587893086+03:00",
+    "UpdatedAt": "2025-03-10T22:21:37.587893086+03:00",
+    "DeletedAt": null,
+    "ID": 25,
+    "song_id": 13,
+    "verse_number": 3,
+    "text": "This is the third verse of the song."
+  }
 }
 ```
 
@@ -535,7 +548,7 @@ DELETE /lyrics/{id}
 
 ```json
 {
-   "deleted_lyric_id": 25
+  "deleted_lyric_id": 25
 }
 ```
 
@@ -556,14 +569,14 @@ PUT /lyrics/{id}
 
 ```json
 {
-   "lyric": {
-      "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
-      "UpdatedAt": "2025-03-10T22:23:36.303528+03:00",
-      "DeletedAt": null,
-      "ID": 24,
-      "song_id": 12,
-      "verse_number": 3,
-      "text": "This is the third verse of the song."
-   }
+  "lyric": {
+    "CreatedAt": "2025-03-10T18:05:47.618779+03:00",
+    "UpdatedAt": "2025-03-10T22:23:36.303528+03:00",
+    "DeletedAt": null,
+    "ID": 24,
+    "song_id": 12,
+    "verse_number": 3,
+    "text": "This is the third verse of the song."
+  }
 }
 ```

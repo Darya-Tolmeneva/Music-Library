@@ -1,6 +1,7 @@
 package router
 
 import (
+	"Music_Library/docs"
 	"Music_Library/internal/transport/handlers"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -9,7 +10,7 @@ import (
 
 func NewRouter() *gin.Engine {
 	router := gin.Default()
-
+	docs.SwaggerInfo.BasePath = "/"
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	songRouter := router.Group("/songs")
