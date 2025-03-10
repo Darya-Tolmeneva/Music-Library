@@ -9,7 +9,7 @@ type Song struct {
 	ID          uint    `gorm:"primaryKey"`
 	Group       string  `json:"group"`
 	Title       string  `json:"title"`
-	ReleaseDate string  `json:"releaseDate"`
+	ReleaseDate string  `json:"release_date"`
 	Link        string  `json:"link"`
 	Lyrics      []Lyric `json:"lyrics" gorm:"foreignKey:SongID"`
 }
@@ -20,5 +20,4 @@ type Lyric struct {
 	SongID      uint   `json:"song_id"`
 	VerseNumber int    `json:"verse_number"`
 	Text        string `json:"text"`
-	CreatedAt   string `json:"created_at"`
 }

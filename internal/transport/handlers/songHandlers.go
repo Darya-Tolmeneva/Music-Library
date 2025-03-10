@@ -4,17 +4,21 @@ import (
 	"Music_Library/internal/database/postgres"
 	"Music_Library/internal/models"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 func GetAllSongs(c *gin.Context) {
 	group := c.Query("group")
-	song := c.Query("song")
+	title := c.Query("title")
+	releaseDate := c.Query("release_date")
+	link := c.Query("link")
+
 	offset, _ := strconv.Atoi(c.DefaultQuery("offset", "0"))
 	pageSize, _ := strconv.Atoi(c.DefaultQuery("page_size", "10"))
 
-	songs, total, err := postgres.GetAllSongs(group, song, offset, pageSize)
+	songs, total, err := postgres.GetAllSongs(group, title, releaseDate, link, offset, pageSize)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -31,10 +35,14 @@ func GetAllSongs(c *gin.Context) {
 }
 
 func GetSong(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
 	song, err := postgres.GetSong(uint(id))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Song not found"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "song not found"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"song": song})
@@ -46,7 +54,7 @@ func AddSong(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
+	log.Printf("Received update data: %+v", newSong)
 	err := postgres.AddSong(&newSong)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -56,26 +64,43 @@ func AddSong(c *gin.Context) {
 }
 
 func DeleteSong(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
-	err := postgres.DeleteSong(uint(id))
+	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"song_id": id})
-
+	err = postgres.DeleteSong(uint(id))
+	if err != nil {
+		if err.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "song not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"deleted_song_id": id})
 }
+
 func UpdateSong(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
 	var updateSong models.Song
-	if err := c.ShouldBindJSON(&updateSong); err != nil {
+	if err = c.ShouldBindJSON(&updateSong); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	err := postgres.UpdateSong(uint(id), &updateSong)
+	log.Printf("Received update data: %+v", updateSong)
+	song, err := postgres.UpdateSong(uint(id), &updateSong)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if err.Error() == "record not found" {
+			c.JSON(http.StatusNotFound, gin.H{"error": "song not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"song": updateSong})
+	c.JSON(http.StatusOK, gin.H{"song": song})
 }

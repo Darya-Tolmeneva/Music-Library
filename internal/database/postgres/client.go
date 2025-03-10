@@ -9,7 +9,7 @@ import (
 	"log/slog"
 )
 
-var db *gorm.DB
+var DB *gorm.DB
 
 func SetupDatabase(log *slog.Logger, cfg *config.Config) {
 	host := cfg.Storage.Host
@@ -22,14 +22,14 @@ func SetupDatabase(log *slog.Logger, cfg *config.Config) {
 		host, user, name, password, port)
 
 	var err error
-	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Error("Failed to connect to database")
 	} else {
 		log.Info("Database connection established")
 	}
 
-	err = db.AutoMigrate(&models.Song{}, &models.Lyric{})
+	err = DB.AutoMigrate(&models.Song{}, &models.Lyric{})
 	if err != nil {
 		log.Error("Failed to migrate database")
 	}

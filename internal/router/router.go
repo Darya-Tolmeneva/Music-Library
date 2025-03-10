@@ -24,6 +24,8 @@ func NewRouter() *gin.Engine {
 	{
 		lyricsRouter.GET("/:id", handlers.GetLyric)
 		lyricsRouter.POST("/", handlers.AddLyric)
+		lyricsRouter.PUT("/:id", handlers.UpdateLyric)
+		lyricsRouter.DELETE("/:id", handlers.DeleteLyric)
 	}
 
 	return router
