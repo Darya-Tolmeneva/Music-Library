@@ -4,7 +4,7 @@ import (
 	"Music_Library/internal/database/postgres"
 	"Music_Library/internal/models"
 	"github.com/gin-gonic/gin"
-	"log"
+	"log/slog"
 	"net/http"
 	"strconv"
 )
@@ -21,17 +21,20 @@ import (
 //	@Failure		400	{object}	map[string]string	"Invalid ID format"
 //	@Failure		404	{object}	map[string]string	"Lyrics not found"
 //	@Router			/lyrics/{id} [get]
-func GetLyric(c *gin.Context) {
+func GetLyric(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		logger.Warn("Invalid ID format", "error", err, "id", c.Param("id"))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 	lyric, err := postgres.GetLyric(uint(id))
 	if err != nil {
+		logger.Error("Invalid input format", "error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "lyric not found"})
 		return
 	}
+	logger.Info("Successfully fetched lyric", "id", id)
 	c.JSON(http.StatusOK, gin.H{"lyric": lyric})
 
 }
@@ -49,27 +52,32 @@ func GetLyric(c *gin.Context) {
 //	@Failure		400		{object}	map[string]string	"Invalid input format"
 //	@Failure		404		{object}	map[string]string	"Lyrics not found"
 //	@Router			/lyrics/{id} [put]
-func UpdateLyric(c *gin.Context) {
+func UpdateLyric(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		logger.Warn("Invalid ID format", "error", err, "id", c.Param("id"))
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 	var updateLyric models.Lyric
 	if err = c.ShouldBindJSON(&updateLyric); err != nil {
+		logger.Error("Invalid input format", "error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("Received update data: %+v", updateLyric)
+	logger.Info("Received update data", "lyric", updateLyric)
 	lyric, err := postgres.UpdateLyric(uint(id), &updateLyric)
 	if err != nil {
 		if err.Error() == "record not found" {
+			logger.Warn("Lyric not found", "id", id)
 			c.JSON(http.StatusNotFound, gin.H{"error": "lyric not found"})
 		} else {
+			logger.Error("Failed to update lyric", "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
 		return
 	}
+	logger.Info("Successfully updated lyric", "id", id, "lyric", lyric)
 	c.JSON(http.StatusOK, gin.H{"lyric": lyric})
 
 }
@@ -86,21 +94,25 @@ func UpdateLyric(c *gin.Context) {
 //	@Failure		400	{object}	map[string]string	"Invalid lyric ID format"
 //	@Failure		404	{object}	map[string]string	"Lyrics not found"
 //	@Router			/lyrics/{id} [delete]
-func DeleteLyric(c *gin.Context) {
+func DeleteLyric(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
+		logger.Warn("Invalid song ID for deletion", "id", c.Param("id"), "error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 	err = postgres.DeleteLyric(uint(id))
 	if err != nil {
 		if err.Error() == "record not found" {
+			logger.Warn("Song not found for deletion", "id", id)
 			c.JSON(http.StatusNotFound, gin.H{"error": "song not found"})
 		} else {
+			logger.Error("Error deleting lyric", "id", id, "error", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		}
 		return
 	}
+	logger.Info("Successfully deleted lyric", "id", id)
 	c.JSON(http.StatusOK, gin.H{"deleted_lyric_id": id})
 
 }
@@ -116,18 +128,21 @@ func DeleteLyric(c *gin.Context) {
 //	@Success		201		{object}	models.Lyric		"Successfully created lyric entry"
 //	@Failure		400		{object}	map[string]string	"Invalid input format"
 //	@Router			/lyrics [post]
-func AddLyric(c *gin.Context) {
+func AddLyric(c *gin.Context, logger *slog.Logger) {
 	var newLyric models.Lyric
 	if err := c.ShouldBindJSON(&newLyric); err != nil {
+		logger.Error("Invalid input for new lyric", "error", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	log.Printf("Received update data: %+v", newLyric)
+	logger.Info("Received new song", "song", newLyric)
 	err := postgres.AddLyric(&newLyric)
 	if err != nil {
+		logger.Error("Error adding lyric", "error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	logger.Info("Successfully added new lyric", "song_id", newLyric.ID)
 	c.JSON(http.StatusOK, gin.H{"lyric": newLyric})
 
 }

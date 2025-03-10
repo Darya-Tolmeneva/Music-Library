@@ -19,7 +19,7 @@ func main() {
 	log := setupLogger(cfg.Env)
 
 	postgres.SetupDatabase(log, cfg)
-	r := router.NewRouter()
+	r := router.NewRouter(log)
 
 	if err := r.Run(":8080"); err != nil {
 		log.Error("Failed to start server")
