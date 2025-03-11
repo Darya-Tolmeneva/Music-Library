@@ -22,8 +22,8 @@ import (
 //	@Param			link			query		string					false	"Filter songs by associated link"
 //	@Param			offset			query		int						false	"Pagination offset, starting from 0 (default: 0)"
 //	@Param			page_size		query		int						false	"Number of items per page (default: 10)"
-//	@Success		200				{object}	map[string]interface{}	"List of songs with pagination metadata"
-//	@Failure		500				{object}	map[string]string		"Internal server error"
+//	@Success		200				{object}	[]models.Song       	"List of songs with pagination metadata"
+//	@Failure		500				{object}	models.ErrorResponse	"Internal server error"
 //	@Router			/songs [get]
 func GetAllSongs(c *gin.Context, logger *slog.Logger) {
 	group := c.Query("group")
@@ -37,7 +37,7 @@ func GetAllSongs(c *gin.Context, logger *slog.Logger) {
 	songs, total, err := postgres.GetAllSongs(group, title, releaseDate, link, offset, pageSize)
 	if err != nil {
 		logger.Error("Error fetching songs", "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		models.NewErrorResponse(c, 500, err.Error())
 		return
 	}
 	logger.Info("Successfully fetched songs", "total", total)
@@ -58,22 +58,22 @@ func GetAllSongs(c *gin.Context, logger *slog.Logger) {
 //	@Tags			songs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		int					true	"ID of the song"
-//	@Success		200	{object}	models.Song			"Song details"
-//	@Failure		400	{object}	map[string]string	"Invalid song ID"
-//	@Failure		404	{object}	map[string]string	"Song not found"
+//	@Param			id	path		int				    	true	"ID of the song"
+//	@Success		200	{object}	models.Song			    "Song details"
+//	@Failure		400	{object}	models.ErrorResponse	"Invalid song ID"
+//	@Failure		404	{object}	models.ErrorResponse	"Song not found"
 //	@Router			/songs/{id} [get]
 func GetSong(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		logger.Warn("Invalid song ID", "id", c.Param("id"), "error", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		models.NewErrorResponse(c, 400, err.Error())
 		return
 	}
 	song, err := postgres.GetSong(uint(id))
 	if err != nil {
 		logger.Error("Error fetching song", "id", id, "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "song not found"})
+		models.NewErrorResponse(c, 500, err.Error())
 		return
 	}
 	logger.Info("Successfully fetched song", "id", id)
@@ -87,22 +87,22 @@ func GetSong(c *gin.Context, logger *slog.Logger) {
 //	@Tags			songs
 //	@Accept			json
 //	@Produce		json
-//	@Param			song	body		models.Song	true	"Song object"
+//	@Param			song	body		models.Song	true	    "Song object"
 //	@Success		201		{object}	models.Song
-//	@Failure		400		{object}	map[string]string	"Invalid input"
+//	@Failure		400		{object}	models.ErrorResponse	"Invalid input"
 //	@Router			/songs [post]
 func AddSong(c *gin.Context, logger *slog.Logger) {
 	var newSong models.Song
 	if err := c.ShouldBindJSON(&newSong); err != nil {
 		logger.Error("Invalid input for new song", "error", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		models.NewErrorResponse(c, 400, err.Error())
 		return
 	}
 	logger.Info("Received new song", "song", newSong)
 	err := postgres.AddSong(&newSong)
 	if err != nil {
 		logger.Error("Error adding song", "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		models.NewErrorResponse(c, 500, err.Error())
 		return
 	}
 	logger.Info("Successfully added new song", "song_id", newSong.ID)
@@ -116,31 +116,31 @@ func AddSong(c *gin.Context, logger *slog.Logger) {
 //	@Tags			songs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		int					true	"ID of the song to be deleted"
-//	@Success		200	{object}	map[string]int		"ID of the deleted song"
-//	@Failure		400	{object}	map[string]string	"Invalid song ID"
-//	@Failure		404	{object}	map[string]string	"Song not found"
+//	@Param			id	path		int				    	true	"ID of the song to be deleted"
+//	@Success		200	{object}	models.Response		    "ID of the deleted song"
+//	@Failure		400	{object}	models.ErrorResponse	"Invalid song ID"
+//	@Failure		404	{object}	models.ErrorResponse	"Song not found"
 //	@Router			/songs/{id} [delete]
 func DeleteSong(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		logger.Warn("Invalid song ID for deletion", "id", c.Param("id"), "error", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		models.NewErrorResponse(c, 400, err.Error())
 		return
 	}
 	err = postgres.DeleteSong(uint(id))
 	if err != nil {
 		if err.Error() == "record not found" {
 			logger.Warn("Song not found for deletion", "id", id)
-			c.JSON(http.StatusNotFound, gin.H{"error": "song not found"})
+			models.NewErrorResponse(c, 404, err.Error())
 		} else {
 			logger.Error("Error deleting song", "id", id, "error", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			models.NewErrorResponse(c, 500, err.Error())
 		}
 		return
 	}
 	logger.Info("Successfully deleted song", "id", id)
-	c.JSON(http.StatusOK, gin.H{"deleted_song_id": id})
+	models.NewResponse(c, id, "successfully deleted")
 }
 
 // UpdateSong godoc
@@ -150,23 +150,23 @@ func DeleteSong(c *gin.Context, logger *slog.Logger) {
 //	@Tags			songs
 //	@Accept			json
 //	@Produce		json
-//	@Param			id		path		int					true	"ID of the song to be updated"
-//	@Param			song	body		models.Song			true	"Updated song details"
-//	@Success		200		{object}	models.Song			"Updated song details"
-//	@Failure		400		{object}	map[string]string	"Invalid input data"
-//	@Failure		404		{object}	map[string]string	"Song not found"
+//	@Param			id		path		int					    true	"ID of the song to be updated"
+//	@Param			song	body		models.Song			    true	"Updated song details"
+//	@Success		200		{object}	models.Song			    "Updated song details"
+//	@Failure		400		{object}	models.ErrorResponse	"Invalid input data"
+//	@Failure		404		{object}	models.ErrorResponse	"Song not found"
 //	@Router			/songs/{id} [put]
 func UpdateSong(c *gin.Context, logger *slog.Logger) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		logger.Warn("Invalid song ID for update", "id", c.Param("id"), "error", err)
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		models.NewErrorResponse(c, 400, err.Error())
 		return
 	}
 
 	var updateSong models.Song
 	if err = c.ShouldBindJSON(&updateSong); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		models.NewErrorResponse(c, 400, err.Error())
 		return
 	}
 
@@ -176,10 +176,10 @@ func UpdateSong(c *gin.Context, logger *slog.Logger) {
 	if err != nil {
 		if err.Error() == "record not found" {
 			logger.Warn("Song not found for update", "id", id)
-			c.JSON(http.StatusNotFound, gin.H{"error": "song not found"})
+			models.NewErrorResponse(c, 404, err.Error())
 		} else {
 			logger.Error("Error updating song", "id", id, "error", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			models.NewErrorResponse(c, 500, err.Error())
 		}
 		return
 	}

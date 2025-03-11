@@ -1,4 +1,9 @@
 definitions:
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
   models.Lyric:
     description: Song lyrics model
     properties:
@@ -10,6 +15,13 @@ definitions:
         type: string
       verse_number:
         type: integer
+    type: object
+  models.Response:
+    properties:
+      id:
+        type: integer
+      message:
+        type: string
     type: object
   models.Song:
     description: Song model
@@ -52,11 +64,9 @@ paths:
           schema:
             $ref: '#/definitions/models.Lyric'
         "400":
-          description: Invalid input format
+          description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new lyric entry
       tags:
       - Lyrics
@@ -78,21 +88,15 @@ paths:
         "200":
           description: Successfully deleted lyric ID
           schema:
-            additionalProperties:
-              type: integer
-            type: object
+            $ref: '#/definitions/models.Response'
         "400":
           description: Invalid lyric ID format
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Lyrics not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Delete a lyric entry
       tags:
       - Lyrics
@@ -117,15 +121,11 @@ paths:
         "400":
           description: Invalid ID format
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Lyrics not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Retrieve lyrics by ID
       tags:
       - Lyrics
@@ -156,15 +156,11 @@ paths:
         "400":
           description: Invalid input format
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Lyrics not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Update lyrics information
       tags:
       - Lyrics
@@ -206,14 +202,13 @@ paths:
         "200":
           description: List of songs with pagination metadata
           schema:
-            additionalProperties: true
-            type: object
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
         "500":
           description: Internal server error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Get all songs
       tags:
       - songs
@@ -238,9 +233,7 @@ paths:
         "400":
           description: Invalid input
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Add a new song
       tags:
       - songs
@@ -261,21 +254,15 @@ paths:
         "200":
           description: ID of the deleted song
           schema:
-            additionalProperties:
-              type: integer
-            type: object
+            $ref: '#/definitions/models.Response'
         "400":
           description: Invalid song ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Song not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Delete a song
       tags:
       - songs
@@ -299,15 +286,11 @@ paths:
         "400":
           description: Invalid song ID
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Song not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Get song by ID
       tags:
       - songs
@@ -338,15 +321,11 @@ paths:
         "400":
           description: Invalid input data
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
         "404":
           description: Song not found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/models.ErrorResponse'
       summary: Update an existing song
       tags:
       - songs

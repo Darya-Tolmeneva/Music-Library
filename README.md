@@ -131,6 +131,8 @@ swag init
                |_ repository.go
      |_ models
          |_ moedls.go
+         |_ errors.go
+         |_ response.go
      |_ router
          |_ router.go
      |_ transport
